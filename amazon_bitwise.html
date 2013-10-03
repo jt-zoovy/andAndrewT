@@ -1,266 +1,266 @@
 <!DOCTYPE html>
 <html>
-        <head>
-                <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
-                <script>
+<head>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
+<script>
 
-                // QUESTIONS
-                //              what is JT receiving for errors?
-                
-                
-                        $( document ).ready(function() {
-                                var $feedsObj= {
-                                        'ERROR' : "4",
-                                        'SENT' : "3",
-                                        'WAIT' : "3",
-                                        'TODO' : "32768",
-                                        'DONE' : "8",
-                                        'SKU' : "TEST_PRODUCT",
-                                        }
-                                
-                                // setting all of the SHOW elements to on for testing - I don't know how JT is planning to pass the values
-                                $SHOW_EXPLAIN = 1;
-                                $SHOW_SUMMARY = 1;
-                                
-                                var val = $feedsObj['ERROR'];
-                                
-                                console.log(val);
-        
-                                var $message = feedsObjConverter($feedsObj);
-                                $('.outputForJT').html($message);
-                                
-
-                                // This is the primary function for JT - Everything above will not be used. The code above simply 
-                                // there to enable the testing of this function
-                                
-                                // feedsObjConverter receives an Amazon SKU feed object (containing bitwise values ) and returns
-                                // a message to the user that will show the status of the SKUs syndication to Amazon in simple to 
-                                // understand way.
-                                
-                                // HOY Andrew - add an example here.
-                                function feedsObjConverter(obj) {
-                                        var $messaging = $("<div \/>");
-                                        
-                                var $UNKNOWN = ($feedsObj['TODO'] | $feedsObj['SENT'] | $feedsObj['WAIT'] | $feedsObj['DONE'] | $feedsObj['ERROR']);
-                                        $UNKNOWN = (~$UNKNOWN & $feedLookup['all']);
-                                        console.log($UNKNOWN);
-
-                                        if (($feedsObj['TODO'] & $feedLookup['deleted'])>0) {
-                                                $("<span \/>").text("Delete from Amazon in Queue").appendTo($messaging);
-                                           $UNKNOWN = 0;  // we know exactly what is going on.
-                                           }
-                                        else if ($feedsObj['TODO']>0) {
-                                           $("<span \/>").text("Feeds to Send: " + describe_bw($feedsObj['TODO'])).appendTo($messaging);
-                                           if ($SHOW_EXPLAIN) {
-                                                  $("<span class='hint' \/>").text("Feeds to send (also called TODO) is an indicator that one or more fields in the product has changed, but no feed file has been sent to amazon with those changes.  Feeds are sent at different times based on the account configuration").appendTo($messaging);
-                                                  }
-                                           }
-                                        if ($feedsObj['SENT']>0) {
-                                           $("<span \/>").text("Sent: " + describe_bw($feedsObj['SENT'])).appendTo($messaging);
-                                           if ($SHOW_EXPLAIN) {
-                                                  $("<span class='hint' \/>").text("DEFINITION: Sent is an indicator that a feed file with this information has (historically) been transfered to amazon successfully.").appendTo($messaging);
-                                                  }
-                                           }
-                                        if ($feedsObj['WAIT']>0) {
-                                           $("<span \/>").text("Waiting: " + describe_bw($feedsObj['WAIT'])).appendTo($messaging);
-                                           if ($SHOW_EXPLAIN) {
-                                                  $("<span class='hint' \/>").text("DEFINITION: Waiting is an indicator that a feed file with this information has been transmitted but Amazon has not processed it.").appendTo($messaging);
-                                                  }
-                                           }
-                                        if ($feedsObj['DONE']>0) {
-                                           $("<span \/>").text("Finished: " + describe_bw($feedsObj['DONE'])).appendTo($messaging);
-                                           if ($SHOW_EXPLAIN) {
-                                                  $("<span class='hint' \/>").text("DEFINITION: Finished is an indicator that the system received a successful response to the last update. It is possible for a feed to be both in \"Done\" and another status such as \"Feeds to Send\", or \"Sent\" in the case of apending update, or an unconfirmed update").appendTo($messaging);
-                                                  }
-                                           }
+// QUESTIONS
+//              what is JT receiving for errors?
 
 
+		$( document ).ready(function() {
+				var $feedsObj= {
+						'ERROR' : "4",
+						'SENT' : "3",
+						'WAIT' : "3",
+						'TODO' : "32768",
+						'DONE' : "8",
+						'SKU' : "TEST_PRODUCT",
+						}
+				
+				// setting all of the SHOW elements to on for testing - I don't know how JT is planning to pass the values
+				$SHOW_EXPLAIN = 1;
+				$SHOW_SUMMARY = 1;
+				
+				var val = $feedsObj['ERROR'];
+				
+				console.log(val);
 
-                                        if ($feedsObj['ERROR']>0) {
+				var $message = feedsObjConverter($feedsObj);
+				$('.outputForJT').html($message);
+				
+
+				// This is the primary function for JT - Everything above will not be used. The code above simply 
+				// there to enable the testing of this function
+				
+				// feedsObjConverter receives an Amazon SKU feed object (containing bitwise values ) and returns
+				// a message to the user that will show the status of the SKUs syndication to Amazon in simple to 
+				// understand way.
+				
+				// HOY Andrew - add an example here.
+				function feedsObjConverter(obj) {
+						var $messaging = $("<div \/>");
+						
+				var $UNKNOWN = ($feedsObj['TODO'] | $feedsObj['SENT'] | $feedsObj['WAIT'] | $feedsObj['DONE'] | $feedsObj['ERROR']);
+						$UNKNOWN = (~$UNKNOWN & $feedLookup['all']);
+						console.log($UNKNOWN);
+
+						if (($feedsObj['TODO'] & $feedLookup['deleted'])>0) {
+								$("<span \/>").text("Delete from Amazon in Queue").appendTo($messaging);
+						   $UNKNOWN = 0;  // we know exactly what is going on.
+						   }
+						else if ($feedsObj['TODO']>0) {
+						   $("<span \/>").text("Feeds to Send: " + describe_bw($feedsObj['TODO'])).appendTo($messaging);
+						   if ($SHOW_EXPLAIN) {
+								  $("<span class='hint' \/>").text("Feeds to send (also called TODO) is an indicator that one or more fields in the product has changed, but no feed file has been sent to amazon with those changes.  Feeds are sent at different times based on the account configuration").appendTo($messaging);
+								  }
+						   }
+						if ($feedsObj['SENT']>0) {
+						   $("<span \/>").text("Sent: " + describe_bw($feedsObj['SENT'])).appendTo($messaging);
+						   if ($SHOW_EXPLAIN) {
+								  $("<span class='hint' \/>").text("DEFINITION: Sent is an indicator that a feed file with this information has (historically) been transfered to amazon successfully.").appendTo($messaging);
+								  }
+						   }
+						if ($feedsObj['WAIT']>0) {
+						   $("<span \/>").text("Waiting: " + describe_bw($feedsObj['WAIT'])).appendTo($messaging);
+						   if ($SHOW_EXPLAIN) {
+								  $("<span class='hint' \/>").text("DEFINITION: Waiting is an indicator that a feed file with this information has been transmitted but Amazon has not processed it.").appendTo($messaging);
+								  }
+						   }
+						if ($feedsObj['DONE']>0) {
+						   $("<span \/>").text("Finished: " + describe_bw($feedsObj['DONE'])).appendTo($messaging);
+						   if ($SHOW_EXPLAIN) {
+								  $("<span class='hint' \/>").text("DEFINITION: Finished is an indicator that the system received a successful response to the last update. It is possible for a feed to be both in \"Done\" and another status such as \"Feeds to Send\", or \"Sent\" in the case of apending update, or an unconfirmed update").appendTo($messaging);
+								  }
+						   }
+
+
+
+						if ($feedsObj['ERROR']>0) {
 //                                         my ($tx) = TXLOG->new($row->{'AMZ_ERROR'});
-                                           $("<span \/>").text("Errors: " + describe_bw($feedsObj['ERROR'])).appendTo($messaging);
+						   $("<span \/>").text("Errors: " + describe_bw($feedsObj['ERROR'])).appendTo($messaging);
 /*
-                                           my @ERROR_DETAIL = ();
-                                           foreach my $feed ('PRODUCTS','PRICES','INVENTORY','IMAGES','RELATIONS','DELETED','BLOCKED') {
-                                                  my $MASK = $feedLookup{lc($feed)};
-                                                  if ($feed eq 'PRODUCTS') { $MASK |= 1; }  # init/products same thing!
-                                                  if (($feedsObj['ERROR'] & $MASK)>0) {
-                                                         my ($UNI,$TS,$PARAMSREF) = $tx->get($feed);
-                                                         push @ERROR_DETAIL, sprintf("%s %s %s",&ZTOOLKIT::pretty_date($TS,2),$feed,$PARAMSREF->{'+'});
-                                                         ## NOTE: eventually we'll embed hinting here
-                                                         }
-                                                  }
-                                           $row->{'MSG'} .= "<b><font color='red'>Error Detail:</font></b>\n";
-                                           if (scalar(@ERROR_DETAIL)==0) {
-                                                  $row->{'MSG'} .= "<i><font color='red'>No Error Detail Was Available</font></i>\n";
-                                                  }
-                                           else {
-                                                  foreach my $line (@ERROR_DETAIL) {
-                                                         $row->{'MSG'} .= "<font color='red'>$line</font>\n";
-                                                         }
-                                                  }
+						   my @ERROR_DETAIL = ();
+						   foreach my $feed ('PRODUCTS','PRICES','INVENTORY','IMAGES','RELATIONS','DELETED','BLOCKED') {
+								  my $MASK = $feedLookup{lc($feed)};
+								  if ($feed eq 'PRODUCTS') { $MASK |= 1; }  # init/products same thing!
+								  if (($feedsObj['ERROR'] & $MASK)>0) {
+										 my ($UNI,$TS,$PARAMSREF) = $tx->get($feed);
+										 push @ERROR_DETAIL, sprintf("%s %s %s",&ZTOOLKIT::pretty_date($TS,2),$feed,$PARAMSREF->{'+'});
+										 ## NOTE: eventually we'll embed hinting here
+										 }
+								  }
+						   $row->{'MSG'} .= "<b><font color='red'>Error Detail:</font></b>\n";
+						   if (scalar(@ERROR_DETAIL)==0) {
+								  $row->{'MSG'} .= "<i><font color='red'>No Error Detail Was Available</font></i>\n";
+								  }
+						   else {
+								  foreach my $line (@ERROR_DETAIL) {
+										 $row->{'MSG'} .= "<font color='red'>$line</font>\n";
+										 }
+								  }
 */                                         }
 
-                                        if ( ($UNKNOWN & $feedLookup['all']) >0) {
-                                           $("<span \/>").text("Unknown: " + describe_bw($UNKNOWN)).appendTo($messaging);
-                                           }
-                                        
-                                        // JT - HELP ME- Can we add something here to indicate that the product has been updated since the last sync? 
-                                        
-                                                
-                                         // lets summarize the product's state.
-                                         if(typeof $SHOW_SUMMARY === 'undefined'){
-                                                }
+						if ( ($UNKNOWN & $feedLookup['all']) >0) {
+						   $("<span \/>").text("Unknown: " + describe_bw($UNKNOWN)).appendTo($messaging);
+						   }
+						
+						// JT - HELP ME- Can we add something here to indicate that the product has been updated since the last sync? 
+						
+								
+						 // lets summarize the product's state.
+						 if(typeof $SHOW_SUMMARY === 'undefined'){
+								}
 
-                                         else if (($feedsObj['TODO'] & $feedLookup['init'])>0) {
-                                                // all feeds waiting to be sent
-                                                $("<span \/>").text("SUMMARY: ").appendTo($messaging);
-                                                $("<span class='hint' \/>").text($feedsObj['SKU'] + " has been queued for a full sync and will be sent shortly").appendTo($messaging);
-                                                }
-                                         else if ( (($feedsObj['ERROR'] > 0) && ($feedsObj['DONE'] & $feedLookup['init'])==0) ) {
-                                                // we have an error and init is still turned on
-                                                $("<span \/>").text("SUMMARY: ").appendTo($messaging);
-                                                $("<span class='hint' \/>").text(" An error has been returned for the [" + describe_bw($feedsObj['ERROR']) + "feed/feeds. Please review the error message detailed above. As our records indicate " + $feedsObj['SKU'] + " has either never been sent to Amazon or has recently been reset, The error(s) will need to be corrected before any feeds can be sent.").appendTo($messaging);
-                                                }
-                                         else if ($feedsObj['ERROR'] > 0) {
-                                                // we have an error but init has been turned off - the feeds that don't have errors will still be sent
-                                                $("<span \/>").text("SUMMARY: ").appendTo($messaging);
-                                                $("<span class='hint' \/>").text(" An error has been returned for the [".describe_bw($feedsObj['ERROR']) + "feed/feeds of $row->{'SKU'}. Although feeds that have not encountered errors may continue to syndicate this issue should be resolved order for the sku to function correctly. Please review the error message detailed above.").appendTo($messaging);
-                                                }
-                                         else if (($feedsObj['SENT'] & $feedLookup['init'])>0 && ($feedsObj['DONE'] & $feedLookup['init'])==0) {
-                                                // init sent - waiting to process
-                                                $("<span \/>").text("SUMMARY: ").appendTo($messaging);
-                                                $("<span class='hint' \/>").text("The initial product feed has been sent for" + $feedsObj['SKU'] + "In order for the other feeds [" + describe_bw[$feedsObj['TODO']] + "] to be accepted by Amazon the initial product feed must be processed first. As soon as Amazon confirm it has been processed we will send the remaining feeds").appendTo($messaging);
-                                                }
-                                         else if (($feedsObj['DONE'] & $feedLookup['init'])>0 && $feedsObj['TODO']>0) {
-                                                // init done - waiting for others to sync
-                                                $("<span \/>").text("SUMMARY: ").appendTo($messaging);
-                                                $("<span class='hint' \/>").text("The initial product feed for $row->{'SKU'} has been processed. The other feeds [" + describe_bw[$feedsObj['TODO']] + "] will be sent during the next sync. If the product feed is included in that list, the product has been saved since the intial sync and will be sent again").appendTo($messaging);
-                                                }
-                                         else if (($feedsObj['SENT'] & $feedLookup['all']) == $feedLookup['all']){
-                                                // all feeds have been sent but we're waiting for Amazon to process
-                                                $("<span \/>").text("SUMMARY: ").appendTo($messaging);
-                                                $("<span class='hint' \/>").text("All feeds have now been sent for " + $feedsObj['SKU'] + ". We are now waiting for Amazon to process them.").appendTo($messaging);
-                                                }
-                                         else if (($feedsObj['DONE'] & $feedLookup['all']) == $feedLookup['all']) {
-                                                // all feeds finished
-                                                $("<span \/>").text("SUMMARY: ").appendTo($messaging);
-                                                $("<span class='hint' \/>").text("Amazon has notified us that all feeds have been processed, and" + $feedsObj['SKU'] + " is now live on Seller Central.").appendTo($messaging);
-                                                }
-                                         else {
-                                                // should never be reached
-                                                $("<span \/>").text("SUMMARY: ").appendTo($messaging);
-                                                ("<span \/>").text("Sorry, something went wrong when trying to generate a summary (this tool is still in development)").appendTo($messaging);
-                                                }
+						 else if (($feedsObj['TODO'] & $feedLookup['init'])>0) {
+								// all feeds waiting to be sent
+								$("<span \/>").text("SUMMARY: ").appendTo($messaging);
+								$("<span class='hint' \/>").text($feedsObj['SKU'] + " has been queued for a full sync and will be sent shortly").appendTo($messaging);
+								}
+						 else if ( (($feedsObj['ERROR'] > 0) && ($feedsObj['DONE'] & $feedLookup['init'])==0) ) {
+								// we have an error and init is still turned on
+								$("<span \/>").text("SUMMARY: ").appendTo($messaging);
+								$("<span class='hint' \/>").text(" An error has been returned for the [" + describe_bw($feedsObj['ERROR']) + "feed/feeds. Please review the error message detailed above. As our records indicate " + $feedsObj['SKU'] + " has either never been sent to Amazon or has recently been reset, The error(s) will need to be corrected before any feeds can be sent.").appendTo($messaging);
+								}
+						 else if ($feedsObj['ERROR'] > 0) {
+								// we have an error but init has been turned off - the feeds that don't have errors will still be sent
+								$("<span \/>").text("SUMMARY: ").appendTo($messaging);
+								$("<span class='hint' \/>").text(" An error has been returned for the [".describe_bw($feedsObj['ERROR']) + "feed/feeds of $row->{'SKU'}. Although feeds that have not encountered errors may continue to syndicate this issue should be resolved order for the sku to function correctly. Please review the error message detailed above.").appendTo($messaging);
+								}
+						 else if (($feedsObj['SENT'] & $feedLookup['init'])>0 && ($feedsObj['DONE'] & $feedLookup['init'])==0) {
+								// init sent - waiting to process
+								$("<span \/>").text("SUMMARY: ").appendTo($messaging);
+								$("<span class='hint' \/>").text("The initial product feed has been sent for" + $feedsObj['SKU'] + "In order for the other feeds [" + describe_bw[$feedsObj['TODO']] + "] to be accepted by Amazon the initial product feed must be processed first. As soon as Amazon confirm it has been processed we will send the remaining feeds").appendTo($messaging);
+								}
+						 else if (($feedsObj['DONE'] & $feedLookup['init'])>0 && $feedsObj['TODO']>0) {
+								// init done - waiting for others to sync
+								$("<span \/>").text("SUMMARY: ").appendTo($messaging);
+								$("<span class='hint' \/>").text("The initial product feed for $row->{'SKU'} has been processed. The other feeds [" + describe_bw[$feedsObj['TODO']] + "] will be sent during the next sync. If the product feed is included in that list, the product has been saved since the intial sync and will be sent again").appendTo($messaging);
+								}
+						 else if (($feedsObj['SENT'] & $feedLookup['all']) == $feedLookup['all']){
+								// all feeds have been sent but we're waiting for Amazon to process
+								$("<span \/>").text("SUMMARY: ").appendTo($messaging);
+								$("<span class='hint' \/>").text("All feeds have now been sent for " + $feedsObj['SKU'] + ". We are now waiting for Amazon to process them.").appendTo($messaging);
+								}
+						 else if (($feedsObj['DONE'] & $feedLookup['all']) == $feedLookup['all']) {
+								// all feeds finished
+								$("<span \/>").text("SUMMARY: ").appendTo($messaging);
+								$("<span class='hint' \/>").text("Amazon has notified us that all feeds have been processed, and" + $feedsObj['SKU'] + " is now live on Seller Central.").appendTo($messaging);
+								}
+						 else {
+								// should never be reached
+								$("<span \/>").text("SUMMARY: ").appendTo($messaging);
+								("<span \/>").text("Sorry, something went wrong when trying to generate a summary (this tool is still in development)").appendTo($messaging);
+								}
 
-                                         if(typeof $SHOW_HISTORY === 'undefined'){
-                                                }
-        /*                               else if ($row->{'AMZ_ERROR'} eq '') {
-                                                $row->{'MSG'} .= "<b>HISTORY:</b>\n";
-                                                $row->{'MSG'} .= "<i>Sorry, no history is available</i>\n";
-                                                }
-                                         else {
-                                                my ($tx) = TXLOG->new($row->{'AMZ_ERROR'});
-                                                # $("<span \/>").text("TX[%s]",$row->{'AMZ_ERROR'});
-                                                $row->{'MSG'} .= "<b>HISTORY:</b>\n";
-                                                # $row->{'MSG'} .= '<pre>'.Dumper($row).'</pre>';
-                                                foreach my $line (@{$tx->lines()}) {
-                                                   my ($UNI,$TS,$PARAMSREF) = &TXLOG::parseline($line);
-                                                   $("<span \/>").text("<div class='hint'>%s %s.%s %s</div>",&ZTOOLKIT::pretty_date($TS,2),$UNI,$PARAMSREF->{'_'},$PARAMSREF->{'+'});
-                                                   }
-                                                }
-                                         $row->{'MSG'} =~ s/\n/<br>/gs;
+						 if(typeof $SHOW_HISTORY === 'undefined'){
+								}
+/*                               else if ($row->{'AMZ_ERROR'} eq '') {
+								$row->{'MSG'} .= "<b>HISTORY:</b>\n";
+								$row->{'MSG'} .= "<i>Sorry, no history is available</i>\n";
+								}
+						 else {
+								my ($tx) = TXLOG->new($row->{'AMZ_ERROR'});
+								# $("<span \/>").text("TX[%s]",$row->{'AMZ_ERROR'});
+								$row->{'MSG'} .= "<b>HISTORY:</b>\n";
+								# $row->{'MSG'} .= '<pre>'.Dumper($row).'</pre>';
+								foreach my $line (@{$tx->lines()}) {
+								   my ($UNI,$TS,$PARAMSREF) = &TXLOG::parseline($line);
+								   $("<span \/>").text("<div class='hint'>%s %s.%s %s</div>",&ZTOOLKIT::pretty_date($TS,2),$UNI,$PARAMSREF->{'_'},$PARAMSREF->{'+'});
+								   }
+								}
+						 $row->{'MSG'} =~ s/\n/<br>/gs;
 */                                              //                                              $("<span \/>").text(bitConverter(obj[index])).appendTo($messaging);
-                                        
-                                        return $messaging;
-                                        }
-                                });
+						
+						return $messaging;
+						}
+				});
 
-                                
-                                // describe_bw - this function takes a bitwise value and returns a string of the equivalent feed names
-                                // eg ( If a bitwise value of 3 is passed to this function it will return "Init,Products" (Init is 1, Products is 2)
-                                var describe_bw = function($val) {
-                                        console.log('made it to descibe_bw') ;
+				
+				// describe_bw - this function takes a bitwise value and returns a string of the equivalent feed names
+				// eg ( If a bitwise value of 3 is passed to this function it will return "Init,Products" (Init is 1, Products is 2)
+				var describe_bw = function($val) {
+						console.log('made it to descibe_bw') ;
 
-                                        var $feedsArray =  [];
-                                        if (($val & 1<<0)>0) { $feedsArray.push("Init"); }
-                                        if (($val & 1<<1)>0) { $feedsArray.push("Products"); }
-                                        if (($val & 1<<2)>0) { $feedsArray.push("prices"); }
-                                        if (($val & 1<<3)>0) { $feedsArray.push("images"); }
-                                        if (($val & 1<<4)>0) { $feedsArray.push("inventory"); }
-                                        if (($val & 1<<5)>0) { $feedsArray.push("relations"); }
-                                        if (($val & 1<<6)>0) { $feedsArray.push("shipping"); }
+						var $feedsArray =  [];
+						if (($val & 1<<0)>0) { $feedsArray.push("Init"); }
+						if (($val & 1<<1)>0) { $feedsArray.push("Products"); }
+						if (($val & 1<<2)>0) { $feedsArray.push("prices"); }
+						if (($val & 1<<3)>0) { $feedsArray.push("images"); }
+						if (($val & 1<<4)>0) { $feedsArray.push("inventory"); }
+						if (($val & 1<<5)>0) { $feedsArray.push("relations"); }
+						if (($val & 1<<6)>0) { $feedsArray.push("shipping"); }
 
-                                        // these are high level product bits
-                                        if (($val & 1<<10)>0) { $feedsArray.push("unreal"); }
-                                        if (($val & 1<<14)>0) { $feedsArray.push("blocked"); }
-                                        if (($val & 1<<15)>0) { $feedsArray.push("deleted"); }
+						// these are high level product bits
+						if (($val & 1<<10)>0) { $feedsArray.push("unreal"); }
+						if (($val & 1<<14)>0) { $feedsArray.push("blocked"); }
+						if (($val & 1<<15)>0) { $feedsArray.push("deleted"); }
 
-                                        var feedString = String($feedsArray);
+						var feedString = String($feedsArray);
 
-                                        return(feedString);
-                                        }
-                                
+						return(feedString);
+						}
+				
 
-                                // feedsLookup holds a list of key value pairs (the key being the feed type and the value being the equivalent bitwise value.
-                                // The lookup is used by JT when he needs to know the bitwise value of a specific feed type.
-                                var $feedLookup = {
-                                        'all' : '2+4+8+16+32+64',  // 2+4+8+16+32+64   (NOT INIT)
+				// feedsLookup holds a list of key value pairs (the key being the feed type and the value being the equivalent bitwise value.
+				// The lookup is used by JT when he needs to know the bitwise value of a specific feed type.
+				var $feedLookup = {
+						'all' : '2+4+8+16+32+64',  // 2+4+8+16+32+64   (NOT INIT)
 
-                                        'init' : '1',
-        //                              'init_mask' : '~1',
-                                        'products' : '2',
-        //                              'products_mask' : '~2',
-                                        'prices' : '4',
-        //                              'prices_mask' : '~4',
-                                        'images' : '8',
-        //                              'images_mask' : '~8',
-                                        'inventory' : '16',
-        //                              'inventory_mask' : '~16',
-                                        'relations' : '32',
-        //                              'relations_mask' : '~32',
-                                        'shipping' : '64',
-        //                              'shipping_mask' : '~64',
-                        
-                                        'docs' : '128',
+						'init' : '1',
+//                              'init_mask' : '~1',
+						'products' : '2',
+//                              'products_mask' : '~2',
+						'prices' : '4',
+//                              'prices_mask' : '~4',
+						'images' : '8',
+//                              'images_mask' : '~8',
+						'inventory' : '16',
+//                              'inventory_mask' : '~16',
+						'relations' : '32',
+//                              'relations_mask' : '~32',
+						'shipping' : '64',
+//                              'shipping_mask' : '~64',
+		
+						'docs' : '128',
 
-                                        'not_needed' : '1<<10', // this product has been flagged as 'not needed' - it will never be transmitted. (ex: vcontainer)
-                                        'parentage' : '1<<14', // this bit is used during a product syndication to see if options changed.
-                                        'blocked' : '1<<14', // used for high level product actions (ex: error)
-                                        'deleted' : '1<<15',
-                                        }
+						'not_needed' : '1<<10', // this product has been flagged as 'not needed' - it will never be transmitted. (ex: vcontainer)
+						'parentage' : '1<<14', // this bit is used during a product syndication to see if options changed.
+						'blocked' : '1<<14', // used for high level product actions (ex: error)
+						'deleted' : '1<<15',
+						}
 
 
 /*                              var $feedLookup = {};            
 
-                                $feedLookup['all'] = [2+4+8+16+32+64];  // 2+4+8+16+32+64   (NOT INIT)
+				$feedLookup['all'] = [2+4+8+16+32+64];  // 2+4+8+16+32+64   (NOT INIT)
 
-                                $feedLookup['init'] = [1];
+				$feedLookup['init'] = [1];
 //                              $feedLookup['init_mask'] = [~1];
-                                $feedLookup['products'] = [2];
+				$feedLookup['products'] = [2];
 //                              $feedLookup['products_mask'] = [~2];
-                                $feedLookup['prices'] = [4];
+				$feedLookup['prices'] = [4];
 //                              $feedLookup['prices_mask'] = [~4];
-                                $feedLookup['images'] = [8];
+				$feedLookup['images'] = [8];
 //                              $feedLookup['images_mask'] = [~8];
-                                $feedLookup['inventory'] = [16];
+				$feedLookup['inventory'] = [16];
 //                              $feedLookup['inventory_mask'] = [~16];
-                                $feedLookup['relations'] = [32];
+				$feedLookup['relations'] = [32];
 //                              $feedLookup['relations_mask'] = [~32];
-                                $feedLookup['shipping'] = [64];
+				$feedLookup['shipping'] = [64];
 //                              $feedLookup['shipping_mask'] = [~64];
-                
-                                $feedLookup['docs'] = [128];
 
-                                $feedLookup['not_needed'] = [1<<10]; // this product has been flagged as 'not needed' - it will never be transmitted. (ex: vcontainer)
-                                $feedLookup['parentage'] = [1<<14]; // this bit is used during a product syndication to see if options changed.
-                                $feedLookup['blocked'] = [1<<14]; // used for high level product actions (ex: error)
-                                $feedLookup['deleted'] = [1<<15];
+				$feedLookup['docs'] = [128];
+
+				$feedLookup['not_needed'] = [1<<10]; // this product has been flagged as 'not needed' - it will never be transmitted. (ex: vcontainer)
+				$feedLookup['parentage'] = [1<<14]; // this bit is used during a product syndication to see if options changed.
+				$feedLookup['blocked'] = [1<<14]; // used for high level product actions (ex: error)
+				$feedLookup['deleted'] = [1<<15];
 */              
-                                // alert(table['one']);
-                
-                </script>
-        </head>
+				// alert(table['one']);
+
+</script>
+</head>
 <body>
 
 <h1>Script for JT</h1>
